@@ -3,7 +3,23 @@ from django.db import models
 
 
 class Course(models.Model):
-    pass
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Название курса"
+    )
+    slug = models.SlugField(
+        unique=True,
+        verbose_name="Ссылка на курс"
+    )
+    description = models.TextField()
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Курс"
+        verbose_name_plural = "Курсы"
+        ordering = ("id",)
 
 
 class Task(models.Model):
@@ -21,7 +37,10 @@ class Task(models.Model):
         verbose_name="Заголовок",
         help_text="Введите название задачи"
     )
-    task_text = models.TextField(blank=False)
+    task_text = models.TextField(
+        blank=False,
+        verbose_name="Условие задачи"
+    )
     pub_date = models.DateTimeField(auto_now_add=True)
     score = models.PositiveSmallIntegerField(
         verbose_name="Оценка",
