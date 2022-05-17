@@ -1,3 +1,4 @@
+from django.conf import  settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -61,4 +62,24 @@ class Task(models.Model):
 
 
 class Attempt(models.Model):
-    pass
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="attempts",
+        on_delete=models.CASCADE
+    )
+    status = ...  # @TODO Наверное нужен enum
+    task = models.ForeignKey(
+        Task,
+        related_name="tasks",
+        on_delete=models.CASCADE
+    )
+    attempt_datetime = models.DateTimeField(auto_now_add=True)
+    solution_text = models.TextField()
+
+    def __str__(self):
+        return f"{self.author} at {self.attempt_datetime}"
+
+    class Meta:
+        ordering = ("-attempt_datetime",)
+        verbose_name = "Попытка"
+        verbose_name_plural = "Попытки"
